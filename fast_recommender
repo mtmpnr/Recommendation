@@ -1,0 +1,18 @@
+import pandas as pd
+data = pd.read_csv('sepet_verileri.csv')
+print(data.head())
+from mlxtend.frequent_patterns import apriori, association_rules
+
+
+basket = pd.get_dummies(data.set_index('Sipariş No')['Ürün Adı'])
+basket = basket.groupby('Sipariş No').sum()
+
+# Apriori 
+frequent_itemsets = apriori(basket, min_support=0.05, use_colnames=True)
+
+# rules_table
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+
+print(rules)
+
